@@ -11,13 +11,33 @@
             box-sizing: border-box;
         }
 
+        :root {
+            /* RevStar Brand Colors */
+            --bg-base: #F5F5F0;
+            --ink-primary: #000000;
+            --ink-secondary: rgba(0, 0, 0, 0.7);
+            --accent-blue: #0066FF;
+            --shape-pink: #FF6B9D;
+            --shape-orange: #FF8C42;
+            --keyline: rgba(0, 0, 0, 0.2);
+
+            /* Spacing */
+            --unit: 8px;
+        }
+
+        @font-face {
+            font-family: 'SF Mono';
+            src: local('SF Mono'), local('Monaco'), local('Consolas');
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1a1a;
-            color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--bg-base);
+            color: var(--ink-primary);
             overflow: hidden;
             height: 100vh;
             touch-action: pan-y;
+            -webkit-font-smoothing: antialiased;
         }
 
         #app {
@@ -28,23 +48,26 @@
 
         /* Top bar */
         #top-bar {
-            background: #000;
-            color: #D0EE96;
+            background: var(--ink-primary);
+            color: var(--bg-base);
             padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
+            border-bottom: 1px solid var(--keyline);
         }
 
         #progress {
-            font-size: 16px;
-            font-weight: 600;
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: opacity 0.12s ease-out;
         }
 
-        #progress:hover {
+        #progress:active {
             opacity: 0.7;
         }
 
@@ -54,19 +77,33 @@
         }
 
         button {
-            background: #D0EE96;
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
+            background: var(--bg-base);
+            color: var(--ink-primary);
+            border: 1px solid var(--keyline);
+            padding: 6px 16px;
+            border-radius: 2px;
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.12s ease-out;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
         }
 
         button:active {
-            opacity: 0.7;
+            background: var(--ink-primary);
+            color: var(--bg-base);
+        }
+
+        button.primary {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        button.primary:active {
+            background: #0052CC;
         }
 
         /* Interventions panel */
@@ -88,16 +125,20 @@
         }
 
         #interventions-list {
-            background: #D0EE96;
-            border-radius: 12px;
-            padding: 24px;
+            background: var(--ink-primary);
+            color: var(--bg-base);
+            border-radius: 4px;
+            padding: 32px 24px;
             max-width: 600px;
             margin: 0 auto;
+            border: 1px solid var(--keyline);
         }
 
         #interventions-list h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 24px;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         #interventions-list ul {
@@ -105,8 +146,8 @@
         }
 
         #interventions-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 16px;
             line-height: 1.5;
         }
@@ -115,17 +156,17 @@
             border-bottom: none;
         }
 
+        #interventions-list strong {
+            font-family: 'SF Mono', monospace;
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 14px;
+        }
+
         .close-interventions {
             position: absolute;
             top: 12px;
             right: 20px;
-            background: #D0EE96;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
         }
 
         /* Card container */
@@ -134,54 +175,65 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
             position: relative;
         }
 
         .card {
-            background: #D0EE96;
-            border-radius: 16px;
-            padding: 40px 32px 60px;
+            background: var(--ink-primary);
+            color: var(--bg-base);
+            border-radius: 4px;
+            padding: 32px 24px 48px;
             width: 100%;
             max-width: 600px;
             min-height: 70vh;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
             position: relative;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.18s ease-out;
+            border: 1px solid var(--keyline);
         }
 
-        .card.swipe-left {
-            opacity: 0;
-        }
-
+        .card.swipe-left,
         .card.swipe-right {
             opacity: 0;
+        }
+
+        .card-time {
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .card-number {
             position: absolute;
             top: 24px;
-            right: 32px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #666;
+            right: 24px;
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
         }
 
         .card-section {
-            font-size: 18px;
-            font-weight: 700;
-            color: #555;
-            margin-bottom: 8px;
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         .card-title {
             font-size: 28px;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 24px;
             line-height: 1.2;
         }
@@ -196,28 +248,32 @@
         }
 
         .card-content li {
-            font-size: 20px;
+            font-size: 18px;
             line-height: 1.6;
             margin-bottom: 16px;
-            padding-left: 24px;
+            padding-left: 20px;
             position: relative;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .card-content li:before {
-            content: "•";
+            content: "·";
             position: absolute;
             left: 0;
             font-weight: 700;
             font-size: 24px;
+            color: var(--accent-blue);
         }
 
         .card-footer {
             position: absolute;
-            bottom: 24px;
-            left: 32px;
-            font-size: 12px;
-            color: #666;
-            font-weight: 600;
+            bottom: 20px;
+            left: 24px;
+            font-family: 'SF Mono', monospace;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
         /* Edit mode */
@@ -239,22 +295,31 @@
         }
 
         #edit-content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
+            background: var(--bg-base);
+            border-radius: 4px;
+            padding: 32px 24px;
             max-width: 800px;
             margin: 0 auto;
+            border: 1px solid var(--keyline);
+        }
+
+        #edit-content h2 {
+            margin-bottom: 16px;
+            font-size: 22px;
+            font-weight: 600;
         }
 
         #edit-content textarea {
             width: 100%;
             min-height: 400px;
-            font-family: monospace;
-            font-size: 14px;
+            font-family: 'SF Mono', monospace;
+            font-size: 13px;
             padding: 16px;
-            border: 2px solid #D0EE96;
-            border-radius: 8px;
+            border: 1px solid var(--keyline);
+            border-radius: 2px;
             margin-bottom: 16px;
+            background: white;
+            line-height: 1.5;
         }
 
         .edit-buttons {
@@ -268,7 +333,104 @@
             right: 20px;
         }
 
-        /* Tap zones (invisible) */
+        /* Overview panel */
+        #overview-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-base);
+            z-index: 200;
+            display: none;
+            padding: 60px 20px 20px;
+            overflow-y: auto;
+        }
+
+        #overview-panel.visible {
+            display: block;
+        }
+
+        .close-overview {
+            position: fixed;
+            top: 12px;
+            right: 20px;
+            z-index: 210;
+        }
+
+        #overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .overview-card {
+            background: var(--ink-primary);
+            color: var(--bg-base);
+            border-radius: 4px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.12s ease-out;
+            position: relative;
+            border: 1px solid var(--keyline);
+        }
+
+        .overview-card:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 102, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .overview-card-time {
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .overview-card-number {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: 'SF Mono', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .overview-card-section {
+            font-family: 'SF Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .overview-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .overview-card-preview {
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.7);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Tap zones */
         .tap-zone {
             position: absolute;
             top: 0;
@@ -286,94 +448,6 @@
             right: 0;
         }
 
-        /* Overview panel */
-        #overview-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 200;
-            display: none;
-            padding: 60px 20px 20px;
-            overflow-y: auto;
-        }
-
-        #overview-panel.visible {
-            display: block;
-        }
-
-        .close-overview {
-            position: absolute;
-            top: 12px;
-            right: 20px;
-            background: #D0EE96;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        #overview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .overview-card {
-            background: #D0EE96;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-        }
-
-        .overview-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(208, 238, 150, 0.3);
-        }
-
-        .overview-card-number {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #666;
-        }
-
-        .overview-card-section {
-            font-size: 12px;
-            font-weight: 700;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .overview-card-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .overview-card-preview {
-            font-size: 13px;
-            line-height: 1.4;
-            color: #333;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .card-title {
@@ -381,11 +455,11 @@
             }
 
             .card-content li {
-                font-size: 18px;
+                font-size: 16px;
             }
 
             .card {
-                padding: 32px 24px 56px;
+                padding: 28px 20px 44px;
                 min-height: 65vh;
             }
 
@@ -393,15 +467,23 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="app">
         <div id="top-bar">
-            <div id="progress">Card 1/42</div>
+            <div id="progress">card 1/25</div>
             <div id="controls">
-                <button id="interventions-btn">Schedule</button>
-                <button id="edit-btn">Edit</button>
+                <button id="interventions-btn">schedule</button>
+                <button id="edit-btn">edit</button>
             </div>
         </div>
 
@@ -409,11 +491,11 @@
             <div class="tap-zone tap-zone-left"></div>
             <div class="tap-zone tap-zone-right"></div>
             <div class="card" id="current-card">
-                <div class="card-section">Welcome</div>
-                <div class="card-title">Welcome Card</div>
+                <div class="card-section">loading</div>
+                <div class="card-title">Loading...</div>
                 <div class="card-content">
                     <ul>
-                        <li>Loading...</li>
+                        <li>Please wait</li>
                     </ul>
                 </div>
                 <div class="card-footer">RevStar Summit '25</div>
@@ -422,7 +504,7 @@
 
         <!-- Interventions panel -->
         <div id="interventions-panel">
-            <button class="close-interventions">Close</button>
+            <button class="close-interventions">close</button>
             <div id="interventions-list">
                 <h2>Interventions (Chronological)</h2>
                 <ul>
@@ -444,90 +526,61 @@
 
         <!-- Edit panel -->
         <div id="edit-panel">
-            <button class="close-edit">Cancel</button>
+            <button class="close-edit">cancel</button>
             <div id="edit-content">
-                <h2 style="margin-bottom: 16px;">Edit Cards (JSON)</h2>
+                <h2>Edit cards</h2>
                 <textarea id="cards-editor"></textarea>
                 <div class="edit-buttons">
-                    <button id="save-btn">Save Changes</button>
-                    <button id="reset-btn" style="background: #ff6b6b;">Reset to Default</button>
+                    <button id="save-btn" class="primary">save changes</button>
+                    <button id="reset-btn">reset to default</button>
                 </div>
             </div>
         </div>
 
         <!-- Overview panel -->
         <div id="overview-panel">
-            <button class="close-overview">Close</button>
+            <button class="close-overview">close</button>
             <div id="overview-grid"></div>
         </div>
     </div>
 
     <script>
-        // Default cards data
+        // Default cards data - CONSOLIDATED
         const DEFAULT_CARDS = [
             {
                 section: "Welcome",
-                title: "Introduction",
+                time: "09:10–09:15",
+                title: "Opening",
                 bullets: [
-                    "I'm Frank, founder of SaaSpasse, a Québec community and media for SaaS and tech startups",
-                    "Honoured to host RevStar Summit"
-                ]
-            },
-            {
-                section: "Welcome",
-                title: "What is RevStar?",
-                bullets: [
+                    "I'm Frank, founder of SaaSpasse, a Québec community and media for SaaS and tech startups; honoured to host",
                     "RevStar is about practical go-to-market and building repeatable revenue",
-                    "Snipcart nod: scrappy marketing machine, isolated, then exit, 👀 fancier sales motion"
-                ]
-            },
-            {
-                section: "Welcome",
-                title: "Personal Connection",
-                bullets: [
+                    "Snipcart nod: scrappy marketing machine, isolated, then exit, 👀 fancier sales motion",
                     "Time-travel today: young growth marketer Frank, stoked about community and GTM playbooks",
                     "Goal for the day: leave with 2-3 concrete moves you can work on Monday"
                 ]
             },
             {
                 section: "Housekeeping",
-                title: "General Info",
+                time: "09:10–09:15",
+                title: "Logistics",
                 bullets: [
-                    "Phones on vibrate; photos welcome",
-                    "FYI, my best profile = the left 😄",
-                    "Tag #RevStar Summit on LinkedIn + @Vasco & @Boreal Ventures"
-                ]
-            },
-            {
-                section: "Housekeeping",
-                title: "Agenda Overview",
-                bullets: [
+                    "Phones on vibrate; photos welcome. FYI, my best profile = the left 😄",
+                    "Tag #RevStar Summit on LinkedIn + @Vasco & @Boreal Ventures",
                     "AM: 3 tactical keynotes (~30 min each)",
                     "Q&A after most talks; keep questions crisp",
-                    "Schedule: revstarsummit.com"
-                ]
-            },
-            {
-                section: "Housekeeping",
-                title: "Day Structure",
-                bullets: [
+                    "Schedule: revstarsummit.com",
                     "Lunch: Agora (follow signs)",
                     "PM: tactical keynote → VC panel → tactical keynote → headline talk"
                 ]
             },
             {
                 section: "JD Saint-Martin",
-                title: "Introduction",
+                time: "09:15",
+                title: "Introduction + Background",
                 bullets: [
                     "President, Lightspeed Commerce",
                     "Chronogolf co-founder",
-                    "Scaled GTM globally from 0M to 1B"
-                ]
-            },
-            {
-                section: "JD Saint-Martin",
-                title: "About JD",
-                bullets: [
+                    "Scaled GTM globally from 0M to 1B",
                     "Leader & operator who knows his stuff",
                     "Also a hip-hop head (excited to have him on the pod!)",
                     "Please welcome JD Saint-Martin!"
@@ -535,6 +588,7 @@
             },
             {
                 section: "JD Saint-Martin",
+                time: "09:15",
                 title: "Q&A Seeds",
                 bullets: [
                     "Which constraints to growth are hardest to hunt down?",
@@ -544,7 +598,8 @@
             },
             {
                 section: "Break",
-                title: "10:00–10:02",
+                time: "10:00–10:02",
+                title: "Morning Break",
                 bullets: [
                     "Announce break",
                     "Back at 10:30"
@@ -552,47 +607,32 @@
             },
             {
                 section: "Sarah Chmielewski",
-                title: "Introduction",
+                time: "10:30",
+                title: "Introduction + Background",
                 bullets: [
                     "VP of Sales, 360insights",
                     "10+ years in tech and SaaS",
-                    "Known for high-performing teams & sustained revenue growth"
-                ]
-            },
-            {
-                section: "Sarah Chmielewski",
-                title: "Topic Focus",
-                bullets: [
+                    "Known for high-performing teams & sustained revenue growth",
                     "AI-powered GTM strategies",
                     "Modern sales enablement: enriched signals → insights → battle cards",
-                    "Turns enablement into rep productivity"
-                ]
-            },
-            {
-                section: "Sarah Chmielewski",
-                title: "Welcome",
-                bullets: [
+                    "Turns enablement into rep productivity",
                     "Please welcome to the stage Sarah Chmielewski!"
                 ]
             },
             {
                 section: "Sarah Chmielewski",
+                time: "10:30",
                 title: "Q&A Seeds",
                 bullets: [
                     "If you had a week for GTM, what enablement artifact would you ship first?",
-                    "Which indicators tell you enablement improves win rate or cycle speed?"
-                ]
-            },
-            {
-                section: "Sarah Chmielewski",
-                title: "Q&A Seeds (cont.)",
-                bullets: [
+                    "Which indicators tell you enablement improves win rate or cycle speed?",
                     "How do you keep AI-assisted enablement accurate, on-brand, and trusted by reps?"
                 ]
             },
             {
                 section: "Break",
-                title: "11:15–11:17",
+                time: "11:15–11:17",
+                title: "Mid-Morning Break",
                 bullets: [
                     "Announce break",
                     "Back at 11:30"
@@ -600,47 +640,32 @@
             },
             {
                 section: "Guillaume Jacquet",
-                title: "Introduction",
+                time: "11:30",
+                title: "Introduction + Background",
                 bullets: [
                     "CEO, Vasco",
                     "Chronogolf co-founder",
-                    "Ex-EVP Product & Technology at Lightspeed"
-                ]
-            },
-            {
-                section: "Guillaume Jacquet",
-                title: "Background",
-                bullets: [
+                    "Ex-EVP Product & Technology at Lightspeed",
                     "2x founder (1 exit)",
                     "Building science-based revenue platform at Vasco",
-                    "One of our best podcast episodes!"
-                ]
-            },
-            {
-                section: "Guillaume Jacquet",
-                title: "Welcome",
-                bullets: [
+                    "One of our best podcast episodes!",
                     "Please welcome to the stage Guillaume Jacquet!"
                 ]
             },
             {
                 section: "Guillaume Jacquet",
+                time: "11:30",
                 title: "Q&A Seeds",
                 bullets: [
                     "First operating cadence to align product, marketing, sales, CS?",
-                    "Which single RevOps metric do you instrument first?"
-                ]
-            },
-            {
-                section: "Guillaume Jacquet",
-                title: "Q&A Seeds (cont.)",
-                bullets: [
+                    "Which single RevOps metric do you instrument first?",
                     "Anti-pattern you see in revenue dashboards or rituals—and how to fix it?"
                 ]
             },
             {
                 section: "Lunch",
-                title: "12:15–12:17",
+                time: "12:15–12:17",
+                title: "Lunch Break",
                 bullets: [
                     "Announce lunch break",
                     "Location: Agora",
@@ -650,48 +675,21 @@
             },
             {
                 section: "Jordan & Doug",
-                title: "Introductions",
+                time: "13:30",
+                title: "Introduction + Background",
                 bullets: [
                     "Jordan Crawford: Founder, Blueprint; co-host, Cannonball GTM",
-                    "Doug Bell: Fractional CMO, Chief Outsiders; co-host, Cannonball GTM"
-                ]
-            },
-            {
-                section: "Jordan & Doug",
-                title: "Blueprint",
-                bullets: [
-                    "AI-driven GTM/data science studio for B2B SaaS",
-                    "Embeds AI agents and workflows to scale messaging",
-                    "Outcomes: clearer ICP, message-market fit, repeatable campaigns"
-                ]
-            },
-            {
-                section: "Jordan & Doug",
-                title: "Chief Outsiders",
-                bullets: [
-                    "Network of fractional CMOs/CSOs",
-                    "Hands-on part-time execs",
-                    "Use cases: interim CMO, first GTM leader, pricing resets, pipeline audits"
-                ]
-            },
-            {
-                section: "Jordan & Doug",
-                title: "Session Focus",
-                bullets: [
+                    "Doug Bell: Fractional CMO, Chief Outsiders; co-host, Cannonball GTM",
+                    "Blueprint: AI-driven GTM/data science studio for B2B SaaS; embeds AI agents",
+                    "Chief Outsiders: network of fractional CMOs/CSOs",
                     "Live AI build: zero to pro-grade campaign in ~60 min",
-                    "Practical workflows, fast iteration",
-                    "Message quality at speed"
-                ]
-            },
-            {
-                section: "Jordan & Doug",
-                title: "Welcome",
-                bullets: [
+                    "Practical workflows, fast iteration, message quality at speed",
                     "Please welcome Jordan Crawford and Doug Bell!"
                 ]
             },
             {
                 section: "Jordan & Doug",
+                time: "13:30",
                 title: "Q&A Note",
                 bullets: [
                     "No Q&A for MC Frank (to confirm)"
@@ -699,31 +697,20 @@
             },
             {
                 section: "VC Panel",
-                title: "Moderator & Panelists",
+                time: "14:30",
+                title: "Moderator + Panelists",
                 bullets: [
-                    "Moderator: David Charbonneau (Managing Partner, Boreal Ventures)"
-                ]
-            },
-            {
-                section: "VC Panel",
-                title: "Panelists",
-                bullets: [
+                    "Moderator: David Charbonneau (Managing Partner, Boreal Ventures)",
                     "Karamdeep Nijjar — Partner, Inovia Capital",
                     "Jim Texier — Partner & CTO, Framework Venture Partners",
-                    "Emily Walsh — Lead Investor, Georgian"
-                ]
-            },
-            {
-                section: "VC Panel",
-                title: "Focus & Welcome",
-                bullets: [
-                    "Panel focus: inside the VC mind",
-                    "What top Canadian investors look for now",
+                    "Emily Walsh — Lead Investor, Georgian",
+                    "Panel focus: inside the VC mind—what top Canadian investors look for now",
                     "Please welcome David Charbonneau and our panelists!"
                 ]
             },
             {
                 section: "VC Panel",
+                time: "14:30",
                 title: "Q&A Note",
                 bullets: [
                     "No Q&A for MC Frank—David moderates"
@@ -731,7 +718,8 @@
             },
             {
                 section: "Break",
-                title: "15:15",
+                time: "15:15",
+                title: "Afternoon Break",
                 bullets: [
                     "Announce break",
                     "Back at 15:30"
@@ -739,65 +727,45 @@
             },
             {
                 section: "Dan Patterson",
-                title: "Introduction",
+                time: "15:30",
+                title: "Introduction + Background",
                 bullets: [
                     "Chief Innovation Officer, Winning by Design",
                     "Winning by Design: B2B revenue architecture & training firm",
-                    "Known for SPICED framework"
-                ]
-            },
-            {
-                section: "Dan Patterson",
-                title: "Topic Focus",
-                bullets: [
+                    "Known for SPICED framework",
                     "Compounding growth: marginal gains beat moonshots",
                     "AI-powered loops turn linear playbooks into flywheels",
-                    "Science-based GTM across customer lifecycle"
-                ]
-            },
-            {
-                section: "Dan Patterson",
-                title: "Welcome",
-                bullets: [
+                    "Science-based GTM across customer lifecycle",
                     "Please welcome to the stage Dr. Dan Patterson!"
                 ]
             },
             {
                 section: "Dan Patterson",
+                time: "15:30",
                 title: "Q&A Seeds",
                 bullets: [
                     "Easiest way to explain growth 'loop' to non-GTM stakeholders?",
-                    "Simplest compounding loop a Series A team can deploy this quarter?"
-                ]
-            },
-            {
-                section: "Dan Patterson",
-                title: "Q&A Seeds (cont.)",
-                bullets: [
+                    "Simplest compounding loop a Series A team can deploy this quarter?",
                     "Where do teams over-engineer growth loops?",
                     "How to simplify the first version?"
                 ]
             },
             {
                 section: "Break",
-                title: "16:15",
+                time: "16:15",
+                title: "Final Break",
                 bullets: [
                     "Announce break"
                 ]
             },
             {
                 section: "Closing",
+                time: "16:15–16:30",
                 title: "Key Themes",
                 bullets: [
                     "Identify constraints early (JD)",
                     "Ship enablement that boosts productivity (Sarah)",
-                    "Install operating cadence + precise RevOps metrics (Guillaume)"
-                ]
-            },
-            {
-                section: "Closing",
-                title: "Key Themes (cont.)",
-                bullets: [
+                    "Install operating cadence + precise RevOps metrics (Guillaume)",
                     "Build fast with AI, protect message quality (Jordan & Doug)",
                     "Know investor signals that prove momentum (VC panel)",
                     "Design compounding loops over one-off wins (Dan)"
@@ -805,6 +773,7 @@
             },
             {
                 section: "Closing",
+                time: "16:15–16:30",
                 title: "Thank You",
                 bullets: [
                     "Thank you to Vasco: precise, actionable insights to engineer & scale growth",
@@ -813,32 +782,22 @@
             },
             {
                 section: "Mark Roberge",
-                title: "The OG!",
+                time: "16:30",
+                title: "Introduction + Background",
                 bullets: [
                     "I owe him & HubSpot my first job as content marketer 😊",
                     "Co-founder & Managing Director, Stage 2 Capital",
-                    "Senior Lecturer, Harvard Business School"
-                ]
-            },
-            {
-                section: "Mark Roberge",
-                title: "Background",
-                bullets: [
+                    "Senior Lecturer, Harvard Business School",
                     "Founding CRO, HubSpot",
                     "Author of 'The Sales Acceleration Formula'",
-                    "Scaled HubSpot from $0 to $100M with metrics-driven GTM"
-                ]
-            },
-            {
-                section: "Mark Roberge",
-                title: "Welcome",
-                bullets: [
+                    "Scaled HubSpot from $0 to $100M with metrics-driven GTM",
                     "Focus: 360° view of GTM precision, pitfalls, and proven strategies",
                     "Please welcome to the stage Mark Roberge!"
                 ]
             },
             {
                 section: "Mark Roberge",
+                time: "16:30",
                 title: "Q&A Note",
                 bullets: [
                     "No Q&A for MC Frank—Gui + JD moderate"
@@ -869,20 +828,18 @@
 
             // Calculate section-based numbering
             const sectionCards = cards.filter(c => c.section === card.section);
-            const sectionIndex = sectionCards.findIndex((c, idx) => {
-                const cardIdx = cards.findIndex(cc => cc === c);
-                return cards.slice(0, currentIndex + 1).filter(x => x.section === card.section).length === idx + 1;
-            });
             const currentSectionNumber = cards.slice(0, currentIndex + 1).filter(c => c.section === card.section).length;
             const totalSectionCards = sectionCards.length;
 
             // Update progress
-            document.getElementById('progress').textContent = `Card ${currentIndex + 1}/${cards.length}`;
+            document.getElementById('progress').textContent = `card ${currentIndex + 1}/${cards.length}`;
 
             // Update card content
             const bullets = card.bullets.map(b => `<li>${b}</li>`).join('');
+            const timeLabel = card.time ? `<div class="card-time">${card.time}</div>` : '';
 
             cardEl.innerHTML = `
+                ${timeLabel}
                 <div class="card-number">${card.section} ${currentSectionNumber}/${totalSectionCards}</div>
                 <div class="card-section">${card.section}</div>
                 <div class="card-title">${card.title}</div>
@@ -899,7 +856,7 @@
                 setTimeout(() => {
                     currentIndex++;
                     renderCard();
-                }, 200);
+                }, 180);
             }
         }
 
@@ -909,7 +866,7 @@
                 setTimeout(() => {
                     currentIndex--;
                     renderCard();
-                }, 200);
+                }, 180);
             }
         }
 
@@ -918,7 +875,7 @@
             cardEl.classList.add(direction);
             setTimeout(() => {
                 cardEl.classList.remove(direction);
-            }, 200);
+            }, 180);
         }
 
         function goToCard(index) {
@@ -933,10 +890,12 @@
                 const sectionCards = cards.filter(c => c.section === card.section);
                 const currentSectionNumber = cards.slice(0, idx + 1).filter(c => c.section === card.section).length;
                 const totalSectionCards = sectionCards.length;
-                const preview = card.bullets.join(' • ');
+                const preview = card.bullets.slice(0, 2).join(' · ');
+                const timeLabel = card.time ? `<div class="overview-card-time">${card.time}</div>` : '';
 
                 return `
                     <div class="overview-card" onclick="goToCard(${idx})">
+                        ${timeLabel}
                         <div class="overview-card-number">${card.section} ${currentSectionNumber}/${totalSectionCards}</div>
                         <div class="overview-card-section">${card.section}</div>
                         <div class="overview-card-title">${card.title}</div>
@@ -1017,9 +976,9 @@
                     const newCards = JSON.parse(document.getElementById('cards-editor').value);
                     cards = newCards;
                     localStorage.setItem('revstar-cards', JSON.stringify(cards));
+                    currentIndex = Math.min(currentIndex, cards.length - 1);
                     renderCard();
                     document.getElementById('edit-panel').classList.remove('visible');
-                    alert('Cards saved successfully!');
                 } catch (e) {
                     alert('Invalid JSON. Please check your syntax.');
                 }
