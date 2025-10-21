@@ -14,6 +14,7 @@
         :root {
             /* RevStar Brand Colors */
             --bg-base: #F5F5F0;
+            --bg-pink: #FFD4E5;
             --ink-primary: #000000;
             --ink-secondary: rgba(0, 0, 0, 0.7);
             --accent-blue: #0066FF;
@@ -33,7 +34,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: var(--accent-green);
+            background: var(--bg-pink);
             color: var(--ink-primary);
             overflow: hidden;
             height: 100vh;
@@ -486,6 +487,107 @@
             right: 0;
         }
 
+        /* All Notes panel */
+        #all-notes-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-base);
+            z-index: 200;
+            display: none;
+            padding: 60px 20px 20px;
+            overflow-y: auto;
+        }
+
+        #all-notes-panel.visible {
+            display: block;
+        }
+
+        .close-all-notes {
+            position: fixed;
+            top: 12px;
+            right: 20px;
+            z-index: 210;
+        }
+
+        #all-notes-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .notes-section {
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--keyline);
+        }
+
+        .notes-section:last-child {
+            border-bottom: none;
+        }
+
+        .notes-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+        }
+
+        .notes-section-name {
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .notes-section-time {
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-secondary);
+        }
+
+        .notes-card {
+            margin-bottom: 32px;
+        }
+
+        .notes-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .notes-card-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .notes-card-bullets {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-card-bullets li {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .notes-card-bullets li:before {
+            content: "·";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--accent-blue);
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .card-title {
@@ -526,6 +628,7 @@
         <div id="top-bar">
             <div id="progress">card 1/25</div>
             <div id="controls">
+                <button id="all-notes-btn">all notes</button>
                 <button id="interventions-btn">schedule</button>
                 <button id="edit-btn">edit</button>
             </div>
@@ -586,6 +689,12 @@
             <button class="close-overview">close</button>
             <div id="overview-grid"></div>
         </div>
+
+        <!-- All Notes panel -->
+        <div id="all-notes-panel">
+            <button class="close-all-notes">close</button>
+            <div id="all-notes-content"></div>
+        </div>
     </div>
 
     <script>
@@ -594,7 +703,7 @@
             {
                 section: "Welcome",
                 time: "09:10",
-                title: "Opening",
+                title: "opening",
                 bullets: [
                     "I'm Frank, founder of SaaSpasse, a Québec community and media for SaaS and tech startups; honoured to host",
                     "RevStar is about practical go-to-market and building repeatable revenue",
@@ -606,7 +715,7 @@
             {
                 section: "Housekeeping",
                 time: "09:10",
-                title: "Logistics",
+                title: "logistics",
                 bullets: [
                     "Phones on vibrate; photos welcome. FYI, my best profile = the left 😄",
                     "Tag #RevStar Summit on LinkedIn + @Vasco & @Boreal Ventures",
@@ -620,7 +729,7 @@
             {
                 section: "JD Saint-Martin",
                 time: "09:15",
-                title: "Introduction + Background",
+                title: "introduction + background",
                 bullets: [
                     "President, Lightspeed Commerce",
                     "Chronogolf co-founder",
@@ -633,7 +742,7 @@
             {
                 section: "JD Saint-Martin",
                 time: "09:15",
-                title: "Q&A Seeds",
+                title: "Q&A seeds",
                 bullets: [
                     "Which constraints to growth are hardest to hunt down?",
                     "Key GTM hires for pre-Series A team?",
@@ -643,7 +752,7 @@
             {
                 section: "Break",
                 time: "10:00",
-                title: "Morning Break",
+                title: "morning break",
                 bullets: [
                     "Announce break",
                     "Back at 10:30"
@@ -652,7 +761,7 @@
             {
                 section: "Sarah Chmielewski",
                 time: "10:30",
-                title: "Introduction + Background",
+                title: "introduction + background",
                 bullets: [
                     "VP of Sales, 360insights",
                     "10+ years in tech and SaaS",
@@ -666,7 +775,7 @@
             {
                 section: "Sarah Chmielewski",
                 time: "10:30",
-                title: "Q&A Seeds",
+                title: "Q&A seeds",
                 bullets: [
                     "If you had a week for GTM, what enablement artifact would you ship first?",
                     "Which indicators tell you enablement improves win rate or cycle speed?",
@@ -676,7 +785,7 @@
             {
                 section: "Break",
                 time: "11:15",
-                title: "Mid-Morning Break",
+                title: "mid-morning break",
                 bullets: [
                     "Announce break",
                     "Back at 11:30"
@@ -685,7 +794,7 @@
             {
                 section: "Guillaume Jacquet",
                 time: "11:30",
-                title: "Introduction + Background",
+                title: "introduction + background",
                 bullets: [
                     "CEO, Vasco",
                     "Chronogolf co-founder",
@@ -699,7 +808,7 @@
             {
                 section: "Guillaume Jacquet",
                 time: "11:30",
-                title: "Q&A Seeds",
+                title: "Q&A seeds",
                 bullets: [
                     "First operating cadence to align product, marketing, sales, CS?",
                     "Which single RevOps metric do you instrument first?",
@@ -709,7 +818,7 @@
             {
                 section: "Lunch",
                 time: "12:15",
-                title: "Lunch Break",
+                title: "lunch break",
                 bullets: [
                     "Announce lunch break",
                     "Location: Agora",
@@ -720,7 +829,7 @@
             {
                 section: "Jordan & Doug",
                 time: "13:30",
-                title: "Introduction + Background",
+                title: "introduction + background",
                 bullets: [
                     "Jordan Crawford: Founder, Blueprint; co-host, Cannonball GTM",
                     "Doug Bell: Fractional CMO, Chief Outsiders; co-host, Cannonball GTM",
@@ -734,7 +843,7 @@
             {
                 section: "Jordan & Doug",
                 time: "13:30",
-                title: "Q&A Note",
+                title: "Q&A note",
                 bullets: [
                     "No Q&A for MC Frank (to confirm)"
                 ]
@@ -742,7 +851,7 @@
             {
                 section: "VC Panel",
                 time: "14:30",
-                title: "Moderator + Panelists",
+                title: "moderator + panelists",
                 bullets: [
                     "Moderator: David Charbonneau (Managing Partner, Boreal Ventures)",
                     "Karamdeep Nijjar — Partner, Inovia Capital",
@@ -755,7 +864,7 @@
             {
                 section: "VC Panel",
                 time: "14:30",
-                title: "Q&A Note",
+                title: "Q&A note",
                 bullets: [
                     "No Q&A for MC Frank—David moderates"
                 ]
@@ -763,7 +872,7 @@
             {
                 section: "Break",
                 time: "15:15",
-                title: "Afternoon Break",
+                title: "afternoon break",
                 bullets: [
                     "Announce break",
                     "Back at 15:30"
@@ -772,7 +881,7 @@
             {
                 section: "Dan Patterson",
                 time: "15:30",
-                title: "Introduction + Background",
+                title: "introduction + background",
                 bullets: [
                     "Chief Innovation Officer, Winning by Design",
                     "Winning by Design: B2B revenue architecture & training firm",
@@ -786,7 +895,7 @@
             {
                 section: "Dan Patterson",
                 time: "15:30",
-                title: "Q&A Seeds",
+                title: "Q&A seeds",
                 bullets: [
                     "Easiest way to explain growth 'loop' to non-GTM stakeholders?",
                     "Simplest compounding loop a Series A team can deploy this quarter?",
@@ -797,7 +906,7 @@
             {
                 section: "Break",
                 time: "16:15",
-                title: "Final Break",
+                title: "final break",
                 bullets: [
                     "Announce break"
                 ]
@@ -805,7 +914,7 @@
             {
                 section: "Closing",
                 time: "16:15",
-                title: "Key Themes",
+                title: "key themes",
                 bullets: [
                     "Identify constraints early (JD)",
                     "Ship enablement that boosts productivity (Sarah)",
@@ -818,7 +927,7 @@
             {
                 section: "Closing",
                 time: "16:15",
-                title: "Thank You",
+                title: "thank you",
                 bullets: [
                     "Thank you to Vasco: precise, actionable insights to engineer & scale growth",
                     "Thank you to Boreal Ventures: GTM-driven Canadian capital with global reach"
@@ -827,7 +936,7 @@
             {
                 section: "Mark Roberge",
                 time: "16:30",
-                title: "Introduction + Background",
+                title: "introduction + background",
                 bullets: [
                     "I owe him & HubSpot my first job as content marketer 😊",
                     "Co-founder & Managing Director, Stage 2 Capital",
@@ -842,7 +951,7 @@
             {
                 section: "Mark Roberge",
                 time: "16:30",
-                title: "Q&A Note",
+                title: "Q&A note",
                 bullets: [
                     "No Q&A for MC Frank—Gui + JD moderate"
                 ]
@@ -953,6 +1062,46 @@
             }).join('');
         }
 
+        function renderAllNotes() {
+            const content = document.getElementById('all-notes-content');
+
+            // Group cards by section
+            const sections = {};
+            cards.forEach(card => {
+                if (!sections[card.section]) {
+                    sections[card.section] = {
+                        time: card.time,
+                        cards: []
+                    };
+                }
+                sections[card.section].cards.push(card);
+            });
+
+            // Render all sections chronologically
+            content.innerHTML = Object.entries(sections).map(([sectionName, sectionData]) => {
+                const timeLabel = sectionData.time ? `<div class="notes-section-time">${sectionData.time}</div>` : '';
+                const cardsHtml = sectionData.cards.map(card => {
+                    const bullets = card.bullets.map(b => `<li>${b}</li>`).join('');
+                    return `
+                        <div class="notes-card">
+                            <div class="notes-card-title">${card.title}</div>
+                            <ul class="notes-card-bullets">${bullets}</ul>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="notes-section">
+                        <div class="notes-section-header">
+                            <div class="notes-section-name">${sectionName}</div>
+                            ${timeLabel}
+                        </div>
+                        ${cardsHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
         function setupEventListeners() {
             // Tap zones
             document.querySelector('.tap-zone-left').addEventListener('click', prevCard);
@@ -998,6 +1147,16 @@
             // Overview panel
             document.querySelector('.close-overview').addEventListener('click', () => {
                 document.getElementById('overview-panel').classList.remove('visible');
+            });
+
+            // All Notes panel
+            document.getElementById('all-notes-btn').addEventListener('click', () => {
+                renderAllNotes();
+                document.getElementById('all-notes-panel').classList.add('visible');
+            });
+
+            document.querySelector('.close-all-notes').addEventListener('click', () => {
+                document.getElementById('all-notes-panel').classList.remove('visible');
             });
 
             // Interventions panel
