@@ -1246,8 +1246,13 @@
 
             // Edit mode
             document.getElementById('edit-btn').addEventListener('click', () => {
-                document.getElementById('cards-editor').value = JSON.stringify(cards, null, 2);
-                document.getElementById('edit-panel').classList.add('visible');
+                const password = prompt('Enter password to edit:');
+                if (password === 'MCFRANK') {
+                    document.getElementById('cards-editor').value = JSON.stringify(cards, null, 2);
+                    document.getElementById('edit-panel').classList.add('visible');
+                } else if (password !== null) {
+                    alert('Incorrect password');
+                }
             });
 
             document.querySelector('.close-edit').addEventListener('click', () => {
