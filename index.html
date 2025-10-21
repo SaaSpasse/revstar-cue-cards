@@ -17,6 +17,7 @@
             --ink-primary: #000000;
             --ink-secondary: rgba(0, 0, 0, 0.7);
             --accent-blue: #0066FF;
+            --accent-green: #D0EE96;
             --shape-pink: #FF6B9D;
             --shape-orange: #FF8C42;
             --keyline: rgba(0, 0, 0, 0.2);
@@ -64,7 +65,25 @@
             font-weight: 500;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: opacity 0.12s ease-out;
+            transition: all 0.12s ease-out;
+            padding: 4px 8px;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        #progress::after {
+            content: "tap to view all";
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            font-size: 9px;
+            color: var(--accent-green);
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        #progress:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         #progress:active {
@@ -180,8 +199,8 @@
         }
 
         .card {
-            background: var(--ink-primary);
-            color: var(--bg-base);
+            background: var(--bg-base);
+            color: var(--ink-primary);
             border-radius: 4px;
             padding: 32px 24px 48px;
             width: 100%;
@@ -216,8 +235,22 @@
             right: 24px;
             font-family: 'SF Mono', monospace;
             font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-green);
+            letter-spacing: 0.5px;
+            background: rgba(208, 238, 150, 0.2);
+            padding: 4px 8px;
+            border-radius: 2px;
+        }
+
+        .card-section-time {
+            position: absolute;
+            bottom: 20px;
+            right: 24px;
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--ink-secondary);
             letter-spacing: 0.5px;
         }
 
@@ -225,7 +258,7 @@
             font-family: 'SF Mono', monospace;
             font-size: 12px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--accent-green);
             margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -253,7 +286,7 @@
             margin-bottom: 16px;
             padding-left: 20px;
             position: relative;
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--ink-primary);
         }
 
         .card-content li:before {
@@ -271,7 +304,7 @@
             left: 24px;
             font-family: 'SF Mono', monospace;
             font-size: 10px;
-            color: rgba(255, 255, 255, 0.3);
+            color: var(--accent-green);
             font-weight: 500;
             letter-spacing: 0.5px;
         }
@@ -831,6 +864,10 @@
             const currentSectionNumber = cards.slice(0, currentIndex + 1).filter(c => c.section === card.section).length;
             const totalSectionCards = sectionCards.length;
 
+            // Check if this is the first card of a new section
+            const isFirstInSection = currentSectionNumber === 1;
+            const sectionTimeLabel = (isFirstInSection && card.time) ? `<div class="card-section-time">${card.time}</div>` : '';
+
             // Update progress
             document.getElementById('progress').textContent = `card ${currentIndex + 1}/${cards.length}`;
 
@@ -847,6 +884,7 @@
                     <ul>${bullets}</ul>
                 </div>
                 <div class="card-footer">RevStar Summit '25</div>
+                ${sectionTimeLabel}
             `;
         }
 
