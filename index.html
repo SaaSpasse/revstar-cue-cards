@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RevStar Summit '25 - MC Notes</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚜️</text></svg>">
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://revstar-mc.netlify.app/">
+    <meta property="og:title" content="RevStar Summit '25 - MC Notes">
+    <meta property="og:description" content="Interactive cue cards for RevStar Summit 2025 - Practical go-to-market and repeatable revenue strategies">
+    <meta property="og:image" content="https://revstar-mc.netlify.app/og-image.png">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://revstar-mc.netlify.app/">
+    <meta name="twitter:title" content="RevStar Summit '25 - MC Notes">
+    <meta name="twitter:description" content="Interactive cue cards for RevStar Summit 2025 - Practical go-to-market and repeatable revenue strategies">
+    <meta name="twitter:image" content="https://revstar-mc.netlify.app/og-image.png">
     <style>
         * {
             margin: 0;
@@ -216,6 +233,7 @@
             position: relative;
             transition: opacity 0.18s ease-out;
             border: 2px solid var(--keyline);
+            overflow-y: auto;
         }
 
         .card.swipe-left,
@@ -265,6 +283,7 @@
             margin-bottom: 16px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
+            display: none;
         }
 
         .card-title {
@@ -307,12 +326,24 @@
             position: absolute;
             bottom: 24px;
             left: 32px;
+            right: 32px;
             font-family: 'SF Mono', monospace;
             font-size: 11px;
+            color: var(--ink-secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-align: center;
+            display: none;
+        }
+
+        .card-footer a {
             color: var(--accent-blue);
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: lowercase;
+            text-decoration: none;
+            transition: opacity 0.12s ease-out;
+        }
+
+        .card-footer a:hover {
+            opacity: 0.7;
         }
 
         /* Edit mode */
@@ -591,18 +622,32 @@
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .card-title {
-                font-size: 28px;
+                font-size: 24px;
+                margin-bottom: 24px;
             }
 
             .card-content li {
-                font-size: 18px;
-                margin-bottom: 20px;
+                font-size: 16px;
+                margin-bottom: 16px;
+                line-height: 1.6;
             }
 
             .card {
-                padding: 32px 24px 56px;
-                min-height: 60vh;
-                max-height: 80vh;
+                padding: 32px 20px 80px;
+                min-height: auto;
+                max-height: 85vh;
+            }
+
+            .card-number {
+                top: 16px;
+                right: 16px;
+                font-size: 11px;
+            }
+
+            .card-section-time {
+                bottom: 16px;
+                right: 20px;
+                font-size: 11px;
             }
 
             #overview-grid {
@@ -610,7 +655,11 @@
             }
 
             .card-footer {
-                font-size: 10px;
+                display: block;
+                font-size: 9px;
+                bottom: 16px;
+                left: 20px;
+                right: 20px;
             }
         }
 
@@ -1008,7 +1057,7 @@
                 <div class="card-content">
                     <ul>${bullets}</ul>
                 </div>
-                <div class="card-footer">RevStar Summit '25</div>
+                <div class="card-footer">made w/ vibes & Claude Code · <a href="https://www.saaspasse.com/podcast" target="_blank">check out the best SaaS content in Québec</a></div>
                 ${sectionTimeLabel}
             `;
         }
