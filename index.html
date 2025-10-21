@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RevStar Summit '25 - MC Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #000;
+            overflow: hidden;
+            height: 100vh;
+            touch-action: pan-y;
+        }
+
+        #app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar */
+        #top-bar {
+            background: #000;
+            color: #D0EE96;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #progress {
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        #progress:hover {
+            opacity: 0.7;
+        }
+
+        #controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            background: #D0EE96;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:active {
+            opacity: 0.7;
+        }
+
+        /* Interventions panel */
+        #interventions-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            display: none;
+            padding: 60px 20px 20px;
+            overflow-y: auto;
+        }
+
+        #interventions-panel.visible {
+            display: block;
+        }
+
+        #interventions-list {
+            background: #D0EE96;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #interventions-list h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        #interventions-list ul {
+            list-style: none;
+        }
+
+        #interventions-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        #interventions-list li:last-child {
+            border-bottom: none;
+        }
+
+        .close-interventions {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            background: #D0EE96;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Card container */
+        #card-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .card {
+            background: #D0EE96;
+            border-radius: 16px;
+            padding: 40px 32px 60px;
+            width: 100%;
+            max-width: 600px;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transition: opacity 0.2s ease;
+        }
+
+        .card.swipe-left {
+            opacity: 0;
+        }
+
+        .card.swipe-right {
+            opacity: 0;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .card-section {
+            font-size: 18px;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        .card-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-content li {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .card-content li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .card-footer {
+            position: absolute;
+            bottom: 24px;
+            left: 32px;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Edit mode */
+        #edit-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            display: none;
+            padding: 60px 20px 20px;
+            overflow-y: auto;
+        }
+
+        #edit-panel.visible {
+            display: block;
+        }
+
+        #edit-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #edit-content textarea {
+            width: 100%;
+            min-height: 400px;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 16px;
+            border: 2px solid #D0EE96;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .edit-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .close-edit {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+        }
+
+        /* Tap zones (invisible) */
+        .tap-zone {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .tap-zone-left {
+            left: 0;
+        }
+
+        .tap-zone-right {
+            right: 0;
+        }
+
+        /* Overview panel */
+        #overview-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            display: none;
+            padding: 60px 20px 20px;
+            overflow-y: auto;
+        }
+
+        #overview-panel.visible {
+            display: block;
+        }
+
+        .close-overview {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            background: #D0EE96;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .overview-card {
+            background: #D0EE96;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(208, 238, 150, 0.3);
+        }
+
+        .overview-card-number {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .overview-card-section {
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .overview-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .overview-card-preview {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #333;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .card-title {
+                font-size: 24px;
+            }
+
+            .card-content li {
+                font-size: 18px;
+            }
+
+            .card {
+                padding: 32px 24px 56px;
+                min-height: 65vh;
+            }
+
+            #overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="top-bar">
+            <div id="progress">Card 1/42</div>
+            <div id="controls">
+                <button id="interventions-btn">Schedule</button>
+                <button id="edit-btn">Edit</button>
+            </div>
+        </div>
+
+        <div id="card-container">
+            <div class="tap-zone tap-zone-left"></div>
+            <div class="tap-zone tap-zone-right"></div>
+            <div class="card" id="current-card">
+                <div class="card-section">Welcome</div>
+                <div class="card-title">Welcome Card</div>
+                <div class="card-content">
+                    <ul>
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+                <div class="card-footer">RevStar Summit '25</div>
+            </div>
+        </div>
+
+        <!-- Interventions panel -->
+        <div id="interventions-panel">
+            <button class="close-interventions">Close</button>
+            <div id="interventions-list">
+                <h2>Interventions (Chronological)</h2>
+                <ul>
+                    <li><strong>09:10–09:15</strong> — Welcome + housekeeping → hand-off to JD Saint‑Martin</li>
+                    <li><strong>10:00–10:02</strong> — Announce break</li>
+                    <li><strong>10:30</strong> — Introduce Sarah Chmielewski</li>
+                    <li><strong>11:15–11:17</strong> — Announce break</li>
+                    <li><strong>11:30</strong> — Introduce Guillaume Jacquet</li>
+                    <li><strong>12:15–12:17</strong> — Announce lunch (Agora)</li>
+                    <li><strong>13:30</strong> — Introduce Jordan Crawford & Doug Bell</li>
+                    <li><strong>14:30</strong> — Introduce VC panel</li>
+                    <li><strong>15:15</strong> — Announce break</li>
+                    <li><strong>15:30</strong> — Introduce Dan Patterson</li>
+                    <li><strong>16:15</strong> — Announce break</li>
+                    <li><strong>16:15–16:30</strong> — Closing remarks + introduce Mark Roberge</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Edit panel -->
+        <div id="edit-panel">
+            <button class="close-edit">Cancel</button>
+            <div id="edit-content">
+                <h2 style="margin-bottom: 16px;">Edit Cards (JSON)</h2>
+                <textarea id="cards-editor"></textarea>
+                <div class="edit-buttons">
+                    <button id="save-btn">Save Changes</button>
+                    <button id="reset-btn" style="background: #ff6b6b;">Reset to Default</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview panel -->
+        <div id="overview-panel">
+            <button class="close-overview">Close</button>
+            <div id="overview-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Default cards data
+        const DEFAULT_CARDS = [
+            {
+                section: "Welcome",
+                title: "Introduction",
+                bullets: [
+                    "I'm Frank, founder of SaaSpasse, a Québec community and media for SaaS and tech startups",
+                    "Honoured to host RevStar Summit"
+                ]
+            },
+            {
+                section: "Welcome",
+                title: "What is RevStar?",
+                bullets: [
+                    "RevStar is about practical go-to-market and building repeatable revenue",
+                    "Snipcart nod: scrappy marketing machine, isolated, then exit, 👀 fancier sales motion"
+                ]
+            },
+            {
+                section: "Welcome",
+                title: "Personal Connection",
+                bullets: [
+                    "Time-travel today: young growth marketer Frank, stoked about community and GTM playbooks",
+                    "Goal for the day: leave with 2-3 concrete moves you can work on Monday"
+                ]
+            },
+            {
+                section: "Housekeeping",
+                title: "General Info",
+                bullets: [
+                    "Phones on vibrate; photos welcome",
+                    "FYI, my best profile = the left 😄",
+                    "Tag #RevStar Summit on LinkedIn + @Vasco & @Boreal Ventures"
+                ]
+            },
+            {
+                section: "Housekeeping",
+                title: "Agenda Overview",
+                bullets: [
+                    "AM: 3 tactical keynotes (~30 min each)",
+                    "Q&A after most talks; keep questions crisp",
+                    "Schedule: revstarsummit.com"
+                ]
+            },
+            {
+                section: "Housekeeping",
+                title: "Day Structure",
+                bullets: [
+                    "Lunch: Agora (follow signs)",
+                    "PM: tactical keynote → VC panel → tactical keynote → headline talk"
+                ]
+            },
+            {
+                section: "JD Saint-Martin",
+                title: "Introduction",
+                bullets: [
+                    "President, Lightspeed Commerce",
+                    "Chronogolf co-founder",
+                    "Scaled GTM globally from 0M to 1B"
+                ]
+            },
+            {
+                section: "JD Saint-Martin",
+                title: "About JD",
+                bullets: [
+                    "Leader & operator who knows his stuff",
+                    "Also a hip-hop head (excited to have him on the pod!)",
+                    "Please welcome JD Saint-Martin!"
+                ]
+            },
+            {
+                section: "JD Saint-Martin",
+                title: "Q&A Seeds",
+                bullets: [
+                    "Which constraints to growth are hardest to hunt down?",
+                    "Key GTM hires for pre-Series A team?",
+                    "Good analysis hygiene for revenue leaders?"
+                ]
+            },
+            {
+                section: "Break",
+                title: "10:00–10:02",
+                bullets: [
+                    "Announce break",
+                    "Back at 10:30"
+                ]
+            },
+            {
+                section: "Sarah Chmielewski",
+                title: "Introduction",
+                bullets: [
+                    "VP of Sales, 360insights",
+                    "10+ years in tech and SaaS",
+                    "Known for high-performing teams & sustained revenue growth"
+                ]
+            },
+            {
+                section: "Sarah Chmielewski",
+                title: "Topic Focus",
+                bullets: [
+                    "AI-powered GTM strategies",
+                    "Modern sales enablement: enriched signals → insights → battle cards",
+                    "Turns enablement into rep productivity"
+                ]
+            },
+            {
+                section: "Sarah Chmielewski",
+                title: "Welcome",
+                bullets: [
+                    "Please welcome to the stage Sarah Chmielewski!"
+                ]
+            },
+            {
+                section: "Sarah Chmielewski",
+                title: "Q&A Seeds",
+                bullets: [
+                    "If you had a week for GTM, what enablement artifact would you ship first?",
+                    "Which indicators tell you enablement improves win rate or cycle speed?"
+                ]
+            },
+            {
+                section: "Sarah Chmielewski",
+                title: "Q&A Seeds (cont.)",
+                bullets: [
+                    "How do you keep AI-assisted enablement accurate, on-brand, and trusted by reps?"
+                ]
+            },
+            {
+                section: "Break",
+                title: "11:15–11:17",
+                bullets: [
+                    "Announce break",
+                    "Back at 11:30"
+                ]
+            },
+            {
+                section: "Guillaume Jacquet",
+                title: "Introduction",
+                bullets: [
+                    "CEO, Vasco",
+                    "Chronogolf co-founder",
+                    "Ex-EVP Product & Technology at Lightspeed"
+                ]
+            },
+            {
+                section: "Guillaume Jacquet",
+                title: "Background",
+                bullets: [
+                    "2x founder (1 exit)",
+                    "Building science-based revenue platform at Vasco",
+                    "One of our best podcast episodes!"
+                ]
+            },
+            {
+                section: "Guillaume Jacquet",
+                title: "Welcome",
+                bullets: [
+                    "Please welcome to the stage Guillaume Jacquet!"
+                ]
+            },
+            {
+                section: "Guillaume Jacquet",
+                title: "Q&A Seeds",
+                bullets: [
+                    "First operating cadence to align product, marketing, sales, CS?",
+                    "Which single RevOps metric do you instrument first?"
+                ]
+            },
+            {
+                section: "Guillaume Jacquet",
+                title: "Q&A Seeds (cont.)",
+                bullets: [
+                    "Anti-pattern you see in revenue dashboards or rituals—and how to fix it?"
+                ]
+            },
+            {
+                section: "Lunch",
+                title: "12:15–12:17",
+                bullets: [
+                    "Announce lunch break",
+                    "Location: Agora",
+                    "Follow the signs",
+                    "Back at 13:30"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                title: "Introductions",
+                bullets: [
+                    "Jordan Crawford: Founder, Blueprint; co-host, Cannonball GTM",
+                    "Doug Bell: Fractional CMO, Chief Outsiders; co-host, Cannonball GTM"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                title: "Blueprint",
+                bullets: [
+                    "AI-driven GTM/data science studio for B2B SaaS",
+                    "Embeds AI agents and workflows to scale messaging",
+                    "Outcomes: clearer ICP, message-market fit, repeatable campaigns"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                title: "Chief Outsiders",
+                bullets: [
+                    "Network of fractional CMOs/CSOs",
+                    "Hands-on part-time execs",
+                    "Use cases: interim CMO, first GTM leader, pricing resets, pipeline audits"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                title: "Session Focus",
+                bullets: [
+                    "Live AI build: zero to pro-grade campaign in ~60 min",
+                    "Practical workflows, fast iteration",
+                    "Message quality at speed"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                title: "Welcome",
+                bullets: [
+                    "Please welcome Jordan Crawford and Doug Bell!"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                title: "Q&A Note",
+                bullets: [
+                    "No Q&A for MC Frank (to confirm)"
+                ]
+            },
+            {
+                section: "VC Panel",
+                title: "Moderator & Panelists",
+                bullets: [
+                    "Moderator: David Charbonneau (Managing Partner, Boreal Ventures)"
+                ]
+            },
+            {
+                section: "VC Panel",
+                title: "Panelists",
+                bullets: [
+                    "Karamdeep Nijjar — Partner, Inovia Capital",
+                    "Jim Texier — Partner & CTO, Framework Venture Partners",
+                    "Emily Walsh — Lead Investor, Georgian"
+                ]
+            },
+            {
+                section: "VC Panel",
+                title: "Focus & Welcome",
+                bullets: [
+                    "Panel focus: inside the VC mind",
+                    "What top Canadian investors look for now",
+                    "Please welcome David Charbonneau and our panelists!"
+                ]
+            },
+            {
+                section: "VC Panel",
+                title: "Q&A Note",
+                bullets: [
+                    "No Q&A for MC Frank—David moderates"
+                ]
+            },
+            {
+                section: "Break",
+                title: "15:15",
+                bullets: [
+                    "Announce break",
+                    "Back at 15:30"
+                ]
+            },
+            {
+                section: "Dan Patterson",
+                title: "Introduction",
+                bullets: [
+                    "Chief Innovation Officer, Winning by Design",
+                    "Winning by Design: B2B revenue architecture & training firm",
+                    "Known for SPICED framework"
+                ]
+            },
+            {
+                section: "Dan Patterson",
+                title: "Topic Focus",
+                bullets: [
+                    "Compounding growth: marginal gains beat moonshots",
+                    "AI-powered loops turn linear playbooks into flywheels",
+                    "Science-based GTM across customer lifecycle"
+                ]
+            },
+            {
+                section: "Dan Patterson",
+                title: "Welcome",
+                bullets: [
+                    "Please welcome to the stage Dr. Dan Patterson!"
+                ]
+            },
+            {
+                section: "Dan Patterson",
+                title: "Q&A Seeds",
+                bullets: [
+                    "Easiest way to explain growth 'loop' to non-GTM stakeholders?",
+                    "Simplest compounding loop a Series A team can deploy this quarter?"
+                ]
+            },
+            {
+                section: "Dan Patterson",
+                title: "Q&A Seeds (cont.)",
+                bullets: [
+                    "Where do teams over-engineer growth loops?",
+                    "How to simplify the first version?"
+                ]
+            },
+            {
+                section: "Break",
+                title: "16:15",
+                bullets: [
+                    "Announce break"
+                ]
+            },
+            {
+                section: "Closing",
+                title: "Key Themes",
+                bullets: [
+                    "Identify constraints early (JD)",
+                    "Ship enablement that boosts productivity (Sarah)",
+                    "Install operating cadence + precise RevOps metrics (Guillaume)"
+                ]
+            },
+            {
+                section: "Closing",
+                title: "Key Themes (cont.)",
+                bullets: [
+                    "Build fast with AI, protect message quality (Jordan & Doug)",
+                    "Know investor signals that prove momentum (VC panel)",
+                    "Design compounding loops over one-off wins (Dan)"
+                ]
+            },
+            {
+                section: "Closing",
+                title: "Thank You",
+                bullets: [
+                    "Thank you to Vasco: precise, actionable insights to engineer & scale growth",
+                    "Thank you to Boreal Ventures: GTM-driven Canadian capital with global reach"
+                ]
+            },
+            {
+                section: "Mark Roberge",
+                title: "The OG!",
+                bullets: [
+                    "I owe him & HubSpot my first job as content marketer 😊",
+                    "Co-founder & Managing Director, Stage 2 Capital",
+                    "Senior Lecturer, Harvard Business School"
+                ]
+            },
+            {
+                section: "Mark Roberge",
+                title: "Background",
+                bullets: [
+                    "Founding CRO, HubSpot",
+                    "Author of 'The Sales Acceleration Formula'",
+                    "Scaled HubSpot from $0 to $100M with metrics-driven GTM"
+                ]
+            },
+            {
+                section: "Mark Roberge",
+                title: "Welcome",
+                bullets: [
+                    "Focus: 360° view of GTM precision, pitfalls, and proven strategies",
+                    "Please welcome to the stage Mark Roberge!"
+                ]
+            },
+            {
+                section: "Mark Roberge",
+                title: "Q&A Note",
+                bullets: [
+                    "No Q&A for MC Frank—Gui + JD moderate"
+                ]
+            }
+        ];
+
+        // App state
+        let cards = [];
+        let currentIndex = 0;
+
+        // Initialize app
+        function init() {
+            // Load cards from localStorage or use defaults
+            const saved = localStorage.getItem('revstar-cards');
+            cards = saved ? JSON.parse(saved) : DEFAULT_CARDS;
+
+            // Render first card
+            renderCard();
+
+            // Setup event listeners
+            setupEventListeners();
+        }
+
+        function renderCard() {
+            const card = cards[currentIndex];
+            const cardEl = document.getElementById('current-card');
+
+            // Calculate section-based numbering
+            const sectionCards = cards.filter(c => c.section === card.section);
+            const sectionIndex = sectionCards.findIndex((c, idx) => {
+                const cardIdx = cards.findIndex(cc => cc === c);
+                return cards.slice(0, currentIndex + 1).filter(x => x.section === card.section).length === idx + 1;
+            });
+            const currentSectionNumber = cards.slice(0, currentIndex + 1).filter(c => c.section === card.section).length;
+            const totalSectionCards = sectionCards.length;
+
+            // Update progress
+            document.getElementById('progress').textContent = `Card ${currentIndex + 1}/${cards.length}`;
+
+            // Update card content
+            const bullets = card.bullets.map(b => `<li>${b}</li>`).join('');
+
+            cardEl.innerHTML = `
+                <div class="card-number">${card.section} ${currentSectionNumber}/${totalSectionCards}</div>
+                <div class="card-section">${card.section}</div>
+                <div class="card-title">${card.title}</div>
+                <div class="card-content">
+                    <ul>${bullets}</ul>
+                </div>
+                <div class="card-footer">RevStar Summit '25</div>
+            `;
+        }
+
+        function nextCard() {
+            if (currentIndex < cards.length - 1) {
+                animateCard('swipe-left');
+                setTimeout(() => {
+                    currentIndex++;
+                    renderCard();
+                }, 200);
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                animateCard('swipe-right');
+                setTimeout(() => {
+                    currentIndex--;
+                    renderCard();
+                }, 200);
+            }
+        }
+
+        function animateCard(direction) {
+            const cardEl = document.getElementById('current-card');
+            cardEl.classList.add(direction);
+            setTimeout(() => {
+                cardEl.classList.remove(direction);
+            }, 200);
+        }
+
+        function goToCard(index) {
+            currentIndex = index;
+            renderCard();
+            document.getElementById('overview-panel').classList.remove('visible');
+        }
+
+        function renderOverview() {
+            const grid = document.getElementById('overview-grid');
+            grid.innerHTML = cards.map((card, idx) => {
+                const sectionCards = cards.filter(c => c.section === card.section);
+                const currentSectionNumber = cards.slice(0, idx + 1).filter(c => c.section === card.section).length;
+                const totalSectionCards = sectionCards.length;
+                const preview = card.bullets.join(' • ');
+
+                return `
+                    <div class="overview-card" onclick="goToCard(${idx})">
+                        <div class="overview-card-number">${card.section} ${currentSectionNumber}/${totalSectionCards}</div>
+                        <div class="overview-card-section">${card.section}</div>
+                        <div class="overview-card-title">${card.title}</div>
+                        <div class="overview-card-preview">${preview}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function setupEventListeners() {
+            // Tap zones
+            document.querySelector('.tap-zone-left').addEventListener('click', prevCard);
+            document.querySelector('.tap-zone-right').addEventListener('click', nextCard);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') prevCard();
+                if (e.key === 'ArrowRight') nextCard();
+            });
+
+            // Swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            const cardContainer = document.getElementById('card-container');
+
+            cardContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            cardContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    nextCard();
+                }
+                if (touchEndX > touchStartX + swipeThreshold) {
+                    prevCard();
+                }
+            }
+
+            // Progress click to open overview
+            document.getElementById('progress').addEventListener('click', () => {
+                renderOverview();
+                document.getElementById('overview-panel').classList.add('visible');
+            });
+
+            // Overview panel
+            document.querySelector('.close-overview').addEventListener('click', () => {
+                document.getElementById('overview-panel').classList.remove('visible');
+            });
+
+            // Interventions panel
+            document.getElementById('interventions-btn').addEventListener('click', () => {
+                document.getElementById('interventions-panel').classList.add('visible');
+            });
+
+            document.querySelector('.close-interventions').addEventListener('click', () => {
+                document.getElementById('interventions-panel').classList.remove('visible');
+            });
+
+            // Edit mode
+            document.getElementById('edit-btn').addEventListener('click', () => {
+                document.getElementById('cards-editor').value = JSON.stringify(cards, null, 2);
+                document.getElementById('edit-panel').classList.add('visible');
+            });
+
+            document.querySelector('.close-edit').addEventListener('click', () => {
+                document.getElementById('edit-panel').classList.remove('visible');
+            });
+
+            document.getElementById('save-btn').addEventListener('click', () => {
+                try {
+                    const newCards = JSON.parse(document.getElementById('cards-editor').value);
+                    cards = newCards;
+                    localStorage.setItem('revstar-cards', JSON.stringify(cards));
+                    renderCard();
+                    document.getElementById('edit-panel').classList.remove('visible');
+                    alert('Cards saved successfully!');
+                } catch (e) {
+                    alert('Invalid JSON. Please check your syntax.');
+                }
+            });
+
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                if (confirm('Reset to default cards? This will delete all your changes.')) {
+                    cards = DEFAULT_CARDS;
+                    localStorage.setItem('revstar-cards', JSON.stringify(cards));
+                    currentIndex = 0;
+                    renderCard();
+                    document.getElementById('edit-panel').classList.remove('visible');
+                }
+            });
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
