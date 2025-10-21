@@ -426,7 +426,7 @@
             font-family: 'SF Mono', monospace;
             font-size: 11px;
             font-weight: 500;
-            color: var(--accent-blue);
+            color: var(--accent-green);
             margin-bottom: 8px;
             letter-spacing: 0.5px;
         }
@@ -723,13 +723,13 @@
                     "Q&A after most talks; keep questions crisp",
                     "Schedule: revstarsummit.com",
                     "Lunch: Agora (follow signs)",
-                    "PM: tactical keynote → VC panel → tactical keynote → headline talk"
+                    "PM: keynote → VC panel → keynote → headline talk"
                 ]
             },
             {
                 section: "JD Saint-Martin",
                 time: "09:15",
-                title: "introduction + background",
+                title: "intro+background",
                 bullets: [
                     "President, Lightspeed Commerce",
                     "Chronogolf co-founder",
@@ -761,7 +761,7 @@
             {
                 section: "Sarah Chmielewski",
                 time: "10:30",
-                title: "introduction + background",
+                title: "intro+background",
                 bullets: [
                     "VP of Sales, 360insights",
                     "10+ years in tech and SaaS",
@@ -794,7 +794,7 @@
             {
                 section: "Guillaume Jacquet",
                 time: "11:30",
-                title: "introduction + background",
+                title: "intro+background",
                 bullets: [
                     "CEO, Vasco",
                     "Chronogolf co-founder",
@@ -829,12 +829,19 @@
             {
                 section: "Jordan & Doug",
                 time: "13:30",
-                title: "introduction + background",
+                title: "background",
                 bullets: [
                     "Jordan Crawford: Founder, Blueprint; co-host, Cannonball GTM",
                     "Doug Bell: Fractional CMO, Chief Outsiders; co-host, Cannonball GTM",
                     "Blueprint: AI-driven GTM/data science studio for B2B SaaS; embeds AI agents",
-                    "Chief Outsiders: network of fractional CMOs/CSOs",
+                    "Chief Outsiders: network of fractional CMOs/CSOs"
+                ]
+            },
+            {
+                section: "Jordan & Doug",
+                time: "13:30",
+                title: "intro",
+                bullets: [
                     "Live AI build: zero to pro-grade campaign in ~60 min",
                     "Practical workflows, fast iteration, message quality at speed",
                     "Please welcome Jordan Crawford and Doug Bell!"
@@ -881,7 +888,7 @@
             {
                 section: "Dan Patterson",
                 time: "15:30",
-                title: "introduction + background",
+                title: "intro+background",
                 bullets: [
                     "Chief Innovation Officer, Winning by Design",
                     "Winning by Design: B2B revenue architecture & training firm",
@@ -936,7 +943,7 @@
             {
                 section: "Mark Roberge",
                 time: "16:30",
-                title: "introduction + background",
+                title: "intro+background",
                 bullets: [
                     "I owe him & HubSpot my first job as content marketer 😊",
                     "Co-founder & Managing Director, Stage 2 Capital",
@@ -944,7 +951,6 @@
                     "Founding CRO, HubSpot",
                     "Author of 'The Sales Acceleration Formula'",
                     "Scaled HubSpot from $0 to $100M with metrics-driven GTM",
-                    "Focus: 360° view of GTM precision, pitfalls, and proven strategies",
                     "Please welcome to the stage Mark Roberge!"
                 ]
             },
@@ -1065,20 +1071,25 @@
         function renderAllNotes() {
             const content = document.getElementById('all-notes-content');
 
-            // Group cards by section
-            const sections = {};
+            // Group cards by section while preserving order
+            const sections = [];
+            const seenSections = new Set();
+
             cards.forEach(card => {
-                if (!sections[card.section]) {
-                    sections[card.section] = {
+                if (!seenSections.has(card.section)) {
+                    seenSections.add(card.section);
+                    sections.push({
+                        name: card.section,
                         time: card.time,
                         cards: []
-                    };
+                    });
                 }
-                sections[card.section].cards.push(card);
+                const section = sections.find(s => s.name === card.section);
+                section.cards.push(card);
             });
 
-            // Render all sections chronologically
-            content.innerHTML = Object.entries(sections).map(([sectionName, sectionData]) => {
+            // Render all sections chronologically (in order they appear)
+            content.innerHTML = sections.map(sectionData => {
                 const timeLabel = sectionData.time ? `<div class="notes-section-time">${sectionData.time}</div>` : '';
                 const cardsHtml = sectionData.cards.map(card => {
                     const bullets = card.bullets.map(b => `<li>${b}</li>`).join('');
@@ -1093,7 +1104,7 @@
                 return `
                     <div class="notes-section">
                         <div class="notes-section-header">
-                            <div class="notes-section-name">${sectionName}</div>
+                            <div class="notes-section-name">${sectionData.name}</div>
                             ${timeLabel}
                         </div>
                         ${cardsHtml}
@@ -1111,6 +1122,13 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowLeft') prevCard();
                 if (e.key === 'ArrowRight') nextCard();
+                if (e.key === 'Escape') {
+                    // Close any open panels
+                    document.getElementById('overview-panel').classList.remove('visible');
+                    document.getElementById('all-notes-panel').classList.remove('visible');
+                    document.getElementById('interventions-panel').classList.remove('visible');
+                    document.getElementById('edit-panel').classList.remove('visible');
+                }
             });
 
             // Swipe support
