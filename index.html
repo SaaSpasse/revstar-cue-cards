@@ -33,7 +33,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: var(--bg-base);
+            background: var(--accent-green);
             color: var(--ink-primary);
             overflow: hidden;
             height: 100vh;
@@ -74,12 +74,13 @@
         #progress::after {
             content: "tap to view all";
             position: absolute;
-            bottom: -18px;
-            left: 0;
+            top: 50%;
+            left: calc(100% + 12px);
+            transform: translateY(-50%);
             font-size: 9px;
-            color: var(--accent-green);
+            color: rgba(255, 255, 255, 0.5);
             letter-spacing: 0.5px;
-            opacity: 0.8;
+            white-space: nowrap;
         }
 
         #progress:hover {
@@ -237,9 +238,9 @@
             font-family: 'SF Mono', monospace;
             font-size: 12px;
             font-weight: 600;
-            color: var(--accent-green);
+            color: var(--accent-blue);
             letter-spacing: 0.5px;
-            background: rgba(208, 238, 150, 0.2);
+            background: rgba(0, 102, 255, 0.1);
             padding: 4px 8px;
             border-radius: 2px;
         }
@@ -259,7 +260,7 @@
             font-family: 'SF Mono', monospace;
             font-size: 13px;
             font-weight: 700;
-            color: var(--accent-green);
+            color: var(--accent-blue);
             margin-bottom: 16px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -307,7 +308,7 @@
             left: 32px;
             font-family: 'SF Mono', monospace;
             font-size: 11px;
-            color: var(--accent-green);
+            color: var(--accent-blue);
             font-weight: 600;
             letter-spacing: 0.8px;
             text-transform: lowercase;
@@ -592,7 +593,7 @@
         const DEFAULT_CARDS = [
             {
                 section: "Welcome",
-                time: "09:10–09:15",
+                time: "09:10",
                 title: "Opening",
                 bullets: [
                     "I'm Frank, founder of SaaSpasse, a Québec community and media for SaaS and tech startups; honoured to host",
@@ -604,7 +605,7 @@
             },
             {
                 section: "Housekeeping",
-                time: "09:10–09:15",
+                time: "09:10",
                 title: "Logistics",
                 bullets: [
                     "Phones on vibrate; photos welcome. FYI, my best profile = the left 😄",
@@ -641,7 +642,7 @@
             },
             {
                 section: "Break",
-                time: "10:00–10:02",
+                time: "10:00",
                 title: "Morning Break",
                 bullets: [
                     "Announce break",
@@ -674,7 +675,7 @@
             },
             {
                 section: "Break",
-                time: "11:15–11:17",
+                time: "11:15",
                 title: "Mid-Morning Break",
                 bullets: [
                     "Announce break",
@@ -707,7 +708,7 @@
             },
             {
                 section: "Lunch",
-                time: "12:15–12:17",
+                time: "12:15",
                 title: "Lunch Break",
                 bullets: [
                     "Announce lunch break",
@@ -803,7 +804,7 @@
             },
             {
                 section: "Closing",
-                time: "16:15–16:30",
+                time: "16:15",
                 title: "Key Themes",
                 bullets: [
                     "Identify constraints early (JD)",
@@ -816,7 +817,7 @@
             },
             {
                 section: "Closing",
-                time: "16:15–16:30",
+                time: "16:15",
                 title: "Thank You",
                 bullets: [
                     "Thank you to Vasco: precise, actionable insights to engineer & scale growth",
@@ -874,19 +875,18 @@
             const currentSectionNumber = cards.slice(0, currentIndex + 1).filter(c => c.section === card.section).length;
             const totalSectionCards = sectionCards.length;
 
-            // Check if this is the first card of a new section
+            // Check if this is the first card of a new section and get the time
             const isFirstInSection = currentSectionNumber === 1;
-            const sectionTimeLabel = (isFirstInSection && card.time) ? `<div class="card-section-time">${card.time}</div>` : '';
+            const firstCardOfSection = sectionCards[0];
+            const sectionTimeLabel = (isFirstInSection && firstCardOfSection.time) ? `<div class="card-section-time">${firstCardOfSection.time}</div>` : '';
 
             // Update progress
             document.getElementById('progress').textContent = `card ${currentIndex + 1}/${cards.length}`;
 
             // Update card content
             const bullets = card.bullets.map(b => `<li>${b}</li>`).join('');
-            const timeLabel = card.time ? `<div class="card-time">${card.time}</div>` : '';
 
             cardEl.innerHTML = `
-                ${timeLabel}
                 <div class="card-number">${card.section} ${currentSectionNumber}/${totalSectionCards}</div>
                 <div class="card-section">${card.section}</div>
                 <div class="card-title">${card.title}</div>
