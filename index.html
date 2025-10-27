@@ -705,7 +705,7 @@
 
         <!-- Site footer -->
         <div id="site-footer">
-            made w/ vibes & Claude Code · <a href="https://www.saaspasse.com/podcast" target="_blank">check out our SaaSpasse stuff!</a>
+            made w/ vibes & Claude Code · <a href="https://www.youtube.com/watch?v=gh6Ov0TGHoo&list=PLJDVaJRVbfO2WQolLRQK8vPd0D0UE5teC" target="_blank">check out SaaSpasse</a>
         </div>
 
         <!-- Interventions panel -->
@@ -715,17 +715,17 @@
                 <h2>Interventions (Chronological)</h2>
                 <ul>
                     <li><strong>09:10–09:15</strong> — Welcome + housekeeping → hand-off to JD Saint‑Martin</li>
-                    <li><strong>10:00–10:02</strong> — Announce break</li>
+                    <li><strong>10:00</strong> — Announce break (back at 10:30)</li>
                     <li><strong>10:30</strong> — Introduce Sarah Chmielewski</li>
-                    <li><strong>11:15–11:17</strong> — Announce break</li>
+                    <li><strong>11:15</strong> — Announce break (back at 11:30)</li>
                     <li><strong>11:30</strong> — Introduce Guillaume Jacquet</li>
-                    <li><strong>12:15–12:17</strong> — Announce lunch (Agora)</li>
+                    <li><strong>12:15</strong> — Announce lunch (Agora, back at 13:30)</li>
                     <li><strong>13:30</strong> — Introduce Jordan Crawford & Doug Bell</li>
                     <li><strong>14:30</strong> — Introduce VC panel</li>
-                    <li><strong>15:15</strong> — Announce break</li>
+                    <li><strong>15:15</strong> — Announce break (back at 15:30)</li>
                     <li><strong>15:30</strong> — Introduce Dan Patterson</li>
-                    <li><strong>16:15</strong> — Announce break</li>
-                    <li><strong>16:15–16:30</strong> — Closing remarks + introduce Mark Roberge</li>
+                    <li><strong>16:15</strong> — Announce break (back at 16:30)</li>
+                    <li><strong>16:30</strong> — Closing remarks + introduce Mark Roberge</li>
                 </ul>
             </div>
         </div>
@@ -757,6 +757,9 @@
     </div>
 
     <script>
+        // Version number - increment this whenever you update cards
+        const CARDS_VERSION = '1.2';
+
         // Default cards data - CONSOLIDATED
         const DEFAULT_CARDS = [
             {
@@ -783,6 +786,18 @@
                     "Schedule: revstarsummit.com",
                     "Lunch: Agora (follow signs)",
                     "PM: keynote → VC panel → keynote → headline talk"
+                ]
+            },
+            {
+                section: "Housekeeping",
+                time: "09:10",
+                title: "venue info",
+                bullets: [
+                    "Lunch: Agora at main floor. Exit elevator, turn right, follow wall until Agora entrance (right side, after reception). Signage will be posted",
+                    "Bathrooms: from stage view, far back right along the wall",
+                    "Photo ops: media wall in the entrance foyer + visit the Vasco booth",
+                    "Vox pop: videographer on-site capturing short interviews",
+                    "Photographer: 16h-18h session, photos shared with everyone post-event"
                 ]
             },
             {
@@ -974,12 +989,13 @@
                 time: "16:15",
                 title: "final break",
                 bullets: [
-                    "Announce break"
+                    "Announce break",
+                    "Back at 16:30"
                 ]
             },
             {
                 section: "Closing",
-                time: "16:15",
+                time: "16:30",
                 title: "key themes",
                 bullets: [
                     "Identify constraints early (JD)",
@@ -992,11 +1008,11 @@
             },
             {
                 section: "Closing",
-                time: "16:15",
+                time: "16:30",
                 title: "thank you",
                 bullets: [
-                    "Thank you to Vasco: precise, actionable insights to engineer & scale growth",
-                    "Thank you to Boreal Ventures: GTM-driven Canadian capital with global reach"
+                    "Thank you to Vasco: precise, actionable insights to engineer & scale growth — what we learned today, to op. it, Vasco = best tool to do so",
+                    "Thank you to Boreal Ventures: GTM-driven Canadian capital with global reach — Boreal, assembled a guild of expert operators, David, Samuel, JD, capital or relationships"
                 ]
             },
             {
@@ -1029,6 +1045,22 @@
 
         // Initialize app
         function init() {
+            // Check for reset parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('reset')) {
+                localStorage.removeItem('revstar-cards');
+                localStorage.removeItem('revstar-cards-version');
+                window.location.href = window.location.pathname;
+                return;
+            }
+
+            // Check version - auto-clear if cards have been updated
+            const savedVersion = localStorage.getItem('revstar-cards-version');
+            if (savedVersion !== CARDS_VERSION) {
+                localStorage.removeItem('revstar-cards');
+                localStorage.setItem('revstar-cards-version', CARDS_VERSION);
+            }
+
             // Load cards from localStorage or use defaults
             const saved = localStorage.getItem('revstar-cards');
             cards = saved ? JSON.parse(saved) : DEFAULT_CARDS;
@@ -1264,6 +1296,7 @@
                     const newCards = JSON.parse(document.getElementById('cards-editor').value);
                     cards = newCards;
                     localStorage.setItem('revstar-cards', JSON.stringify(cards));
+                    localStorage.setItem('revstar-cards-version', CARDS_VERSION);
                     currentIndex = Math.min(currentIndex, cards.length - 1);
                     renderCard();
                     document.getElementById('edit-panel').classList.remove('visible');
@@ -1276,6 +1309,7 @@
                 if (confirm('Reset to default cards? This will delete all your changes.')) {
                     cards = DEFAULT_CARDS;
                     localStorage.setItem('revstar-cards', JSON.stringify(cards));
+                    localStorage.setItem('revstar-cards-version', CARDS_VERSION);
                     currentIndex = 0;
                     renderCard();
                     document.getElementById('edit-panel').classList.remove('visible');
